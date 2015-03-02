@@ -69,6 +69,10 @@ class MainWindow(QMainWindow):
         self.ui.splitter.setStretchFactor(0, 1)
         self.ui.splitter.setStretchFactor(1, 4)
 
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.replot)
+        self.time = QTime()
+
     def getOpenFileName(self, filter, caption='', dir=''):
         return QFileDialog.getOpenFileName(self, caption, dir, filter)
 
@@ -76,6 +80,7 @@ class MainWindow(QMainWindow):
         return QFileDialog.getSaveFileName(self, caption, dir, filter)
 
     def plot(self, start):
+        start -= start % 2
         cnt = int(start * (self.rate/1000.0))
         self.ui.statusbar.showMessage(self.tr('%1 / %2')
                                           .arg(cnt/1000.0)
@@ -86,14 +91,11 @@ class MainWindow(QMainWindow):
         self.c2.setData([cnt*self.interval]*2, [-1, 1])
         dx = np.arange(max(bef, 0), min(end, self.nframe)) * self.interval
         if bef < 0:
-            self.c1.setData(dx[::100],
-                            self.dy[:end][::100])
+            self.c1.setData(dx, self.dy[:end])
         elif bef >= 0 and end < self.nframe-1:
-            self.c1.setData(dx[::100],
-                            self.dy[bef:end][::100])
+            self.c1.setData(dx, self.dy[bef:end])
         else:
-            self.c1.setData(dx[::100],
-                            self.dy[bef:][::100])
+            self.c1.setData(dx, self.dy[bef:])
         self.ui.qwtPlot.setAxisScale(QwtPlot.xBottom,
                                      bef*self.interval,
                                      end*self.interval)
@@ -118,11 +120,17 @@ class MainWindow(QMainWindow):
                                     Phonon.PausedState,
                                     Phonon.BufferingState]:
             return
-        self.ticked(self.obj.currentTime())
+        self.plot(self.obj.currentTime())
 
     @pyqtSlot(int)
     def ticked(self, time):
-        self.plot(time)
+        self.time.restart()
+
+    @pyqtSlot()
+    def replot(self):
+        if self.obj.state() != Phonon.PlayingState:
+            return
+        self.plot(self.obj.currentTime()+self.time.elapsed())
 
     @pyqtSlot()
     def on_textEdit_textChanged(self):
@@ -187,9 +195,12 @@ class MainWindow(QMainWindow):
         if ( self.obj.state() == Phonon.StoppedState or
              self.obj.state() == Phonon.PausedState ):
             self.obj.play()
+            self.timer.start(16)
+            self.time.start()
             self.ui.actionStartPause.setText(self.tr('Pause'))
         elif self.obj.state() == Phonon.PlayingState:
             self.obj.pause()
+            self.timer.stop()
             self.update_pause_stop()
         elif self.obj.state() == Phonon.BufferingState:
             pass
