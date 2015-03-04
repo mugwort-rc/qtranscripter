@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import numpy as np
 import scipy.io.wavfile
 
@@ -71,7 +72,8 @@ class MainWindow(QMainWindow):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.replot)
-        self.time = QTime()
+        if os.name == 'posix':
+            self.time = QTime()
 
     def getOpenFileName(self, filter, caption='', dir=''):
         return QFileDialog.getOpenFileName(self, caption, dir, filter)
@@ -124,13 +126,17 @@ class MainWindow(QMainWindow):
 
     @pyqtSlot(int)
     def ticked(self, time):
-        self.time.restart()
+        if os.name == 'posix':
+            self.time.restart()
 
     @pyqtSlot()
     def replot(self):
         if self.obj.state() != Phonon.PlayingState:
             return
-        self.plot(self.obj.currentTime()+self.time.elapsed())
+        if os.name == 'posix':
+            self.plot(self.obj.currentTime()+self.time.elapsed())
+        else:
+            self.plot(self.obj.currentTime())
 
     @pyqtSlot()
     def on_textEdit_textChanged(self):
@@ -196,7 +202,8 @@ class MainWindow(QMainWindow):
              self.obj.state() == Phonon.PausedState ):
             self.obj.play()
             self.timer.start(16)
-            self.time.start()
+            if os.name == 'posix':
+                self.time.start()
             self.ui.actionStartPause.setText(self.tr('Pause'))
         elif self.obj.state() == Phonon.PlayingState:
             self.obj.pause()
