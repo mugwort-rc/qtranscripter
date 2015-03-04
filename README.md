@@ -1,15 +1,15 @@
-# QTranscription
+# QTranscripter
 
 ## Usage
 
 ```bash
-./qtranscription/main.py
+./qtranscripter/main.py
 ```
 
 or
 
 ```bash
-python ./qtranscription/
+python ./qtranscripter/
 ```
 
 ## Requirements

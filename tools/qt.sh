@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-pyuic4 qtranscription/ui_mainwindow.ui -o qtranscription/ui_mainwindow.py
+pyuic4 qtranscripter/ui_mainwindow.ui -o qtranscripter/ui_mainwindow.py
