@@ -26,7 +26,7 @@
          <widget class="QwtPlot" name="qwtPlot"/>
         </item>
         <item>
-         <widget class="Phonon::SeekSlider" name="seekSlider" native="true"/>
+         <widget class="Phonon::SeekSlider" name="seekSlider"/>
         </item>
        </layout>
       </widget>
@@ -47,7 +47,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>18</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -88,7 +88,7 @@
     <string>Start</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Return</string>
+    <string>Pause</string>
    </property>
   </action>
   <action name="actionStop">

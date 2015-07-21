@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
         self.initUi()
 
     def initUi(self):
-        self.plot_width = 1.5  # display sec
+        self.plot_width = 3.0  # display sec
 
         self.ui.qwtPlot.setAxisScale(QwtPlot.yLeft, -1, 1)
         self.ui.qwtPlot.setAxisScale(QwtPlot.xBottom,
