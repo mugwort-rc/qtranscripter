@@ -21,6 +21,8 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.lastOpenDir = ""
+
         self.WAVE_FILTER = self.tr('Wave (*.wav)')
 
         self.initUi()
@@ -75,11 +77,22 @@ class MainWindow(QMainWindow):
         if os.name == 'posix':
             self.time = QTime()
 
-    def getOpenFileName(self, filter, caption='', dir=''):
+    def getOpenFileName(self, filter, caption='', dir=None):
+        if dir is None:
+            dir = self.lastOpenDir
         return QFileDialog.getOpenFileName(self, caption, dir, filter)
 
-    def getSaveFileName(self, filter, caption='', dir=''):
+    def getSaveFileName(self, filter, caption='', dir=None):
+        if dir is None:
+            dir = self.lastOpenDir
         return QFileDialog.getSaveFileName(self, caption, dir, filter)
+
+    def setLastOpenDirectory(self, path):
+        info = QFileInfo(path)
+        if info.isDir():
+            self.lastOpenDir = path
+        else:
+            self.lastOpenDir = info.dir().path()
 
     def plot(self, start):
         start -= start % 2
@@ -180,6 +193,7 @@ class MainWindow(QMainWindow):
         filepath = self.getOpenFileName(self.WAVE_FILTER)
         if filepath.isEmpty():
             return
+        self.setLastOpenDirectory(filepath)
         filepath = unicode(filepath)
         # get media
         self.rate, self.wav = scipy.io.wavfile.read(filepath, mmap=True)
