@@ -246,3 +246,13 @@ class MainWindow(QMainWindow):
         hour   = time / 1000 / 60 / 60
         text = '<{:02d}:{:02d}:{:02d}.{}>'.format(hour, minute, second, milsec)
         self.ui.textEdit.textCursor().insertText(text)
+
+
+    @pyqtSlot()
+    def on_actionBack_triggered(self):
+        self.back(1000)
+
+    def back(self, back):
+        time = self.obj.currentTime() - back
+        self.obj.seek(time)
+        self.plot(time)

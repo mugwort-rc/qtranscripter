@@ -63,6 +63,7 @@
     <addaction name="actionWaveOpen"/>
     <addaction name="actionStartPause"/>
     <addaction name="actionStop"/>
+    <addaction name="actionBack"/>
    </widget>
    <widget class="QMenu" name="menuText">
     <property name="title">
@@ -88,7 +89,10 @@
     <string>Start</string>
    </property>
    <property name="shortcut">
-    <string>Pause</string>
+    <string>Ctrl+;</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionStop">
@@ -96,7 +100,7 @@
     <string>Stop</string>
    </property>
    <property name="shortcut">
-    <string>S</string>
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="actionPause">
@@ -118,6 +122,60 @@
   <action name="actionExit">
    <property name="text">
     <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="actionBack">
+   <property name="text">
+    <string>Back</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionBack10">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Back10</string>
+   </property>
+  </action>
+  <action name="actionBack15">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Back15</string>
+   </property>
+  </action>
+  <action name="actionBack20">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Back20</string>
+   </property>
+  </action>
+  <action name="actionBack25">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Back25</string>
+   </property>
+  </action>
+  <action name="actionBack30">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Back30</string>
    </property>
   </action>
  </widget>
