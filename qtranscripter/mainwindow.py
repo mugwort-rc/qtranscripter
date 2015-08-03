@@ -105,12 +105,21 @@ class MainWindow(QMainWindow):
         bef = cnt-wid
         self.c2.setData([cnt*self.interval]*2, [-1, 1])
         dx = np.arange(max(bef, 0), min(end, self.nframe)) * self.interval
+
+        dy = None
         if bef < 0:
-            self.c1.setData(dx, self.dy[:end])
+            dy = self.wav[:end]
         elif bef >= 0 and end < self.nframe-1:
-            self.c1.setData(dx, self.dy[bef:end])
+            dy = self.wav[bef:end]
         else:
-            self.c1.setData(dx, self.dy[bef:])
+            dy = self.wav[bef:]
+
+        # get 1ch
+        if isinstance(dy[0], np.ndarray):
+            ch = len(dy[0])
+            dy = dy.reshape(len(dy)*ch)[::ch]
+
+        self.c1.setData(dx, dy / 32768.0)
         self.ui.qwtPlot.setAxisScale(QwtPlot.xBottom,
                                      bef*self.interval,
                                      end*self.interval)
@@ -199,12 +208,6 @@ class MainWindow(QMainWindow):
         self.rate, self.wav = scipy.io.wavfile.read(filepath, mmap=True)
         self.nframe = len(self.wav)
         self.interval = 1.0 / self.rate
-        # get 1ch
-        if isinstance(self.wav[0], np.ndarray):
-            ch = len(self.wav[0])
-            self.dy = self.wav.reshape(self.nframe*ch)[::ch] / 32768.0
-        else:
-            self.dy = self.wav / 32768.0
 
         # set media
         self.obj.setCurrentSource(Phonon.MediaSource(filepath))
