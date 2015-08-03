@@ -14,6 +14,10 @@ from models import TimePointModel
 from utils import ClickRelease
 from utils import TimePointHighlighter
 
+
+CACHE_SIZE = 1000
+
+
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -29,6 +33,9 @@ class MainWindow(QMainWindow):
 
     def initUi(self):
         self.plot_width = 3.0  # display sec
+        self.cache = None
+        self.cache_width = None
+        self.cache_start = 0
 
         self.ui.qwtPlot.setAxisScale(QwtPlot.yLeft, -1, 1)
         self.ui.qwtPlot.setAxisScale(QwtPlot.xBottom,
@@ -106,20 +113,24 @@ class MainWindow(QMainWindow):
         self.c2.setData([cnt*self.interval]*2, [-1, 1])
         dx = np.arange(max(bef, 0), min(end, self.nframe)) * self.interval
 
+        if self.cache is None or self.cache_start > cnt or (self.cache_start+self.cache_width) < end:
+            print "reload", bef, cnt, self.cache_start, (self.cache_start+self.cache_width)
+            self.cache = self.wav[max(bef, 0):min(bef+self.cache_width, self.nframe)]
+            if isinstance(self.cache[0], np.ndarray):
+                ch = len(self.cache[0])
+                self.cache = self.cache.reshape(len(self.cache)*ch)[::ch]
+            self.cache /= 32768.0
+            self.cache_start = cnt
+
         dy = None
         if bef < 0:
-            dy = self.wav[:end]
-        elif bef >= 0 and end < self.nframe-1:
-            dy = self.wav[bef:end]
+            dy = self.cache[:end]
+        elif bef >= 0 and end < len(self.cache)-1:
+            dy = self.cache[bef:end]
         else:
-            dy = self.wav[bef:]
+            dy = self.cache[bef:]
 
-        # get 1ch
-        if isinstance(dy[0], np.ndarray):
-            ch = len(dy[0])
-            dy = dy.reshape(len(dy)*ch)[::ch]
-
-        self.c1.setData(dx, dy / 32768.0)
+        self.c1.setData(dx, dy)
         self.ui.qwtPlot.setAxisScale(QwtPlot.xBottom,
                                      bef*self.interval,
                                      end*self.interval)
@@ -208,6 +219,7 @@ class MainWindow(QMainWindow):
         self.rate, self.wav = scipy.io.wavfile.read(filepath, mmap=True)
         self.nframe = len(self.wav)
         self.interval = 1.0 / self.rate
+        self.cache_width = self.rate * self.plot_width * CACHE_SIZE
 
         # set media
         self.obj.setCurrentSource(Phonon.MediaSource(filepath))
