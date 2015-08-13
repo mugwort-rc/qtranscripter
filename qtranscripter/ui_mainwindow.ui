@@ -64,6 +64,7 @@
     <addaction name="actionStartPause"/>
     <addaction name="actionStop"/>
     <addaction name="actionBack"/>
+    <addaction name="actionForward"/>
    </widget>
    <widget class="QMenu" name="menuText">
     <property name="title">
@@ -176,6 +177,17 @@
    </property>
    <property name="text">
     <string>Back30</string>
+   </property>
+  </action>
+  <action name="actionForward">
+   <property name="text">
+    <string>Forward</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
  </widget>

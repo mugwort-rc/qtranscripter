@@ -28,7 +28,8 @@ class MainWindow(QMainWindow):
         self.initUi()
 
     def initUi(self):
-        self.plot_width = 3.0  # display sec
+        self.plot_width = 1.5  # display sec
+        self.dy = None
 
         self.ui.qwtPlot.setAxisScale(QwtPlot.yLeft, -1, 1)
         self.ui.qwtPlot.setAxisScale(QwtPlot.xBottom,
@@ -199,12 +200,16 @@ class MainWindow(QMainWindow):
         self.rate, self.wav = scipy.io.wavfile.read(filepath, mmap=True)
         self.nframe = len(self.wav)
         self.interval = 1.0 / self.rate
+        if self.dy is not None:
+            self.dy = None
         # get 1ch
         if isinstance(self.wav[0], np.ndarray):
             ch = len(self.wav[0])
             self.dy = self.wav.reshape(self.nframe*ch)[::ch] / 32768.0
         else:
             self.dy = self.wav / 32768.0
+
+        self.setWindowTitle(self.tr("%1").arg(QFileInfo(filepath).fileName()))
 
         # set media
         self.obj.setCurrentSource(Phonon.MediaSource(filepath))
@@ -252,7 +257,16 @@ class MainWindow(QMainWindow):
     def on_actionBack_triggered(self):
         self.back(1000)
 
+    @pyqtSlot()
+    def on_actionForward_triggered(self):
+        self.forward(1000)
+
     def back(self, back):
         time = self.obj.currentTime() - back
+        self.obj.seek(time)
+        self.plot(time)
+
+    def forward(self, forward):
+        time = self.obj.currentTime() + forward
         self.obj.seek(time)
         self.plot(time)
