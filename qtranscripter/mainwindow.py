@@ -273,12 +273,6 @@ class MainWindow(QMainWindow):
 
     @pyqtSlot()
     def on_actionCursorLeft_triggered(self):
-        cursor = self.ui.textEdit.textCursor()
-        cursor.setPosition(cursor.position()-1)
-        self.ui.textEdit.setTextCursor(cursor)
-
-    @pyqtSlot()
-    def on_actionCursorLeft_triggered(self):
         self.moveCursor(QTextCursor.Left)
 
     @pyqtSlot()
@@ -293,9 +287,25 @@ class MainWindow(QMainWindow):
     def on_actionCursorDown_triggered(self):
         self.moveCursor(QTextCursor.Down)
 
-    def moveCursor(self, move):
+    @pyqtSlot()
+    def on_actionSelectLeft_triggered(self):
+        self.moveCursor(QTextCursor.Left, QTextCursor.KeepAnchor)
+
+    @pyqtSlot()
+    def on_actionSelectRight_triggered(self):
+        self.moveCursor(QTextCursor.Right, QTextCursor.KeepAnchor)
+
+    @pyqtSlot()
+    def on_actionSelectUp_triggered(self):
+        self.moveCursor(QTextCursor.Up, QTextCursor.KeepAnchor)
+
+    @pyqtSlot()
+    def on_actionSelectDown_triggered(self):
+        self.moveCursor(QTextCursor.Down, QTextCursor.KeepAnchor)
+
+    def moveCursor(self, move, anchor=QTextCursor.MoveAnchor):
         cursor = self.ui.textEdit.textCursor()
-        cursor.movePosition(move)
+        cursor.movePosition(move, anchor)
         self.ui.textEdit.setTextCursor(cursor)
 
     @pyqtSlot()

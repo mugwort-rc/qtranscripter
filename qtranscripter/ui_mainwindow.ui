@@ -78,6 +78,10 @@
      <addaction name="actionCursorRight"/>
      <addaction name="actionCursorUp"/>
      <addaction name="actionCursorDown"/>
+     <addaction name="actionSelectLeft"/>
+     <addaction name="actionSelectRight"/>
+     <addaction name="actionSelectUp"/>
+     <addaction name="actionSelectDown"/>
     </widget>
     <addaction name="actionInsertTimestamp"/>
     <addaction name="menuCursor"/>
@@ -263,6 +267,50 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+V</string>
+   </property>
+  </action>
+  <action name="actionSelectLeft">
+   <property name="text">
+    <string>SelectLeft</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+H</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionSelectRight">
+   <property name="text">
+    <string>SelectRight</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionSelectUp">
+   <property name="text">
+    <string>SelectUp</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+K</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionSelectDown">
+   <property name="text">
+    <string>SelectDown</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+J</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
  </widget>
