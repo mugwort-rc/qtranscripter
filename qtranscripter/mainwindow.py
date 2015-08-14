@@ -316,7 +316,7 @@ class MainWindow(QMainWindow):
     @pyqtSlot()
     def on_actionTextPaste_triggered(self):
         text = QApplication.clipboard().text()
-        self.ui.textEdit.setPlainText(text)
+        self.ui.textEdit.insertPlainText(text)
 
     @pyqtSlot()
     def on_actionInsertUnprintable_triggered(self):
