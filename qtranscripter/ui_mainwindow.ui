@@ -70,7 +70,17 @@
     <property name="title">
      <string>&amp;Text</string>
     </property>
+    <widget class="QMenu" name="menuCursor">
+     <property name="title">
+      <string>Cursor</string>
+     </property>
+     <addaction name="actionCursorLeft"/>
+     <addaction name="actionCursorRight"/>
+     <addaction name="actionCursorUp"/>
+     <addaction name="actionCursorDown"/>
+    </widget>
     <addaction name="actionInsertTimestamp"/>
+    <addaction name="menuCursor"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWave"/>
@@ -185,6 +195,47 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCursorLeft">
+   <property name="text">
+    <string>Left</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCursorRight">
+   <property name="text">
+    <string>Right</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCursorUp">
+   <property name="text">
+    <string>Up</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCursorDown">
+   <property name="text">
+    <string>Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+J</string>
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>

@@ -270,3 +270,30 @@ class MainWindow(QMainWindow):
         time = self.obj.currentTime() + forward
         self.obj.seek(time)
         self.plot(time)
+
+    @pyqtSlot()
+    def on_actionCursorLeft_triggered(self):
+        cursor = self.ui.textEdit.textCursor()
+        cursor.setPosition(cursor.position()-1)
+        self.ui.textEdit.setTextCursor(cursor)
+
+    @pyqtSlot()
+    def on_actionCursorLeft_triggered(self):
+        self.moveCursor(QTextCursor.Left)
+
+    @pyqtSlot()
+    def on_actionCursorRight_triggered(self):
+        self.moveCursor(QTextCursor.Right)
+
+    @pyqtSlot()
+    def on_actionCursorUp_triggered(self):
+        self.moveCursor(QTextCursor.Up)
+
+    @pyqtSlot()
+    def on_actionCursorDown_triggered(self):
+        self.moveCursor(QTextCursor.Down)
+
+    def moveCursor(self, move):
+        cursor = self.ui.textEdit.textCursor()
+        cursor.movePosition(move)
+        self.ui.textEdit.setTextCursor(cursor)
