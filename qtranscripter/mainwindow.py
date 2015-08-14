@@ -297,3 +297,14 @@ class MainWindow(QMainWindow):
         cursor = self.ui.textEdit.textCursor()
         cursor.movePosition(move)
         self.ui.textEdit.setTextCursor(cursor)
+
+    @pyqtSlot()
+    def on_actionTextCopy_triggered(self):
+        text = self.ui.textEdit.toPlainText()
+        QApplication.clipboard().setText(text)
+
+    @pyqtSlot()
+    def on_actionTextPaste_triggered(self):
+        text = QApplication.clipboard().text()
+        self.ui.textEdit.setPlainText(text)
+
