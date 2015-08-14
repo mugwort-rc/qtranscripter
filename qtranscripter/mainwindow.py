@@ -318,3 +318,7 @@ class MainWindow(QMainWindow):
         text = QApplication.clipboard().text()
         self.ui.textEdit.setPlainText(text)
 
+    @pyqtSlot()
+    def on_actionInsertUnprintable_triggered(self):
+        unprintable = u"\u25a0"
+        self.ui.textEdit.insertPlainText(unprintable)

@@ -87,6 +87,7 @@
     <addaction name="menuCursor"/>
     <addaction name="actionTextCopy"/>
     <addaction name="actionTextPaste"/>
+    <addaction name="actionInsertUnprintable"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWave"/>
@@ -311,6 +312,14 @@
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionInsertUnprintable">
+   <property name="text">
+    <string>InsertUnprintable</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+X</string>
    </property>
   </action>
  </widget>
