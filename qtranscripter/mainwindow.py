@@ -186,6 +186,9 @@ class MainWindow(QMainWindow):
             if reg.cap(4):
                 milsec = int(reg.cap(5))
             time = hour * 3600000 + minute * 60000 + second * 1000 + milsec
+            time -= self.baseMsecs()
+            if time < 0:
+                time = 0
             self.obj.seek(time)
             self.plot(time)
 
@@ -244,7 +247,7 @@ class MainWindow(QMainWindow):
 
     @pyqtSlot()
     def on_actionInsertTimestamp_triggered(self):
-        time = self.obj.currentTime()
+        time = self.obj.currentTime() + self.baseMsecs()
         milsec = time % 1000
         second = time / 1000 % 60
         minute = time / 1000 / 60 % 60
@@ -252,6 +255,8 @@ class MainWindow(QMainWindow):
         text = '<{:02d}:{:02d}:{:02d}.{}>'.format(hour, minute, second, milsec)
         self.ui.textEdit.textCursor().insertText(text)
 
+    def baseMsecs(self):
+        return QTime(0, 0).msecsTo(self.ui.timeEdit.time())
 
     @pyqtSlot()
     def on_actionBack_triggered(self):
