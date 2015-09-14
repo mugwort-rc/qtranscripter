@@ -78,6 +78,16 @@ class MainWindow(QMainWindow):
         if os.name == 'posix':
             self.time = QTime()
 
+    def closeEvent(self, event):
+        ret = QMessageBox.information(self, self.tr("Close"),
+                                      self.tr("Do you want to exit?"),
+                                      QMessageBox.Ok | QMessageBox.Cancel,
+                                      QMessageBox.Cancel)
+        if ret == QMessageBox.Cancel:
+            event.ignore()
+        else:
+            event.accept()
+
     def getOpenFileName(self, filter, caption='', dir=None):
         if dir is None:
             dir = self.lastOpenDir
