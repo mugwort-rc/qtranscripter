@@ -9,6 +9,7 @@ from PyQt4.Qwt5 import *
 from PyQt4.phonon import Phonon
 
 from ui_mainwindow import Ui_MainWindow
+from persondialog import PersonDialog
 
 from models import TimePointModel
 from utils import ClickRelease
@@ -20,6 +21,8 @@ class MainWindow(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.persons = PersonDialog(self)
 
         self.lastOpenDir = ""
 
@@ -337,3 +340,11 @@ class MainWindow(QMainWindow):
     def on_actionInsertUnprintable_triggered(self):
         unprintable = u"\u25a0"
         self.ui.textEdit.insertPlainText(unprintable)
+
+    @pyqtSlot()
+    def on_actionInsertPerson_triggered(self):
+        ret = self.persons.exec_()
+        if ret != QDialog.Accepted:
+            return
+        person = self.persons.person()
+        self.ui.textEdit.insertPlainText(person)
