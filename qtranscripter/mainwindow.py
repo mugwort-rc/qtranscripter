@@ -9,6 +9,7 @@ from PyQt4.Qwt5 import *
 from PyQt4.phonon import Phonon
 
 from ui_mainwindow import Ui_MainWindow
+from persondialog import PersonDialog
 
 from models import TimePointModel
 from utils import ClickRelease
@@ -25,6 +26,8 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.persons = PersonDialog(self)
+
         self.lastOpenDir = ""
 
         self.WAVE_FILTER = self.tr('Wave (*.wav)')
@@ -36,6 +39,7 @@ class MainWindow(QMainWindow):
         self.cache = None
         self.cache_width = None
         self.cache_start = 0
+        self.dy = None
 
         self.ui.qwtPlot.setAxisScale(QwtPlot.yLeft, -1, 1)
         self.ui.qwtPlot.setAxisScale(QwtPlot.xBottom,
@@ -84,6 +88,16 @@ class MainWindow(QMainWindow):
         if os.name == 'posix':
             self.time = QTime()
 
+    def closeEvent(self, event):
+        ret = QMessageBox.information(self, self.tr("Close"),
+                                      self.tr("Do you want to exit?"),
+                                      QMessageBox.Ok | QMessageBox.Cancel,
+                                      QMessageBox.Cancel)
+        if ret == QMessageBox.Cancel:
+            event.ignore()
+        else:
+            event.accept()
+
     def getOpenFileName(self, filter, caption='', dir=None):
         if dir is None:
             dir = self.lastOpenDir
@@ -114,7 +128,6 @@ class MainWindow(QMainWindow):
         dx = np.arange(max(bef, 0), min(end, self.nframe)) * self.interval
 
         if self.cache is None or self.cache_start > cnt or (self.cache_start+self.cache_width) < end:
-            print "reload", bef, cnt, self.cache_start, (self.cache_start+self.cache_width)
             self.cache = self.wav[max(bef, 0):min(bef+self.cache_width, self.nframe)]
             if isinstance(self.cache[0], np.ndarray):
                 ch = len(self.cache[0])
@@ -205,6 +218,9 @@ class MainWindow(QMainWindow):
             if reg.cap(4):
                 milsec = int(reg.cap(5))
             time = hour * 3600000 + minute * 60000 + second * 1000 + milsec
+            time -= self.baseMsecs()
+            if time < 0:
+                time = 0
             self.obj.seek(time)
             self.plot(time)
 
@@ -220,6 +236,8 @@ class MainWindow(QMainWindow):
         self.nframe = len(self.wav)
         self.interval = 1.0 / self.rate
         self.cache_width = self.rate * self.plot_width * CACHE_SIZE
+
+        self.setWindowTitle(self.tr("%1").arg(QFileInfo(filepath).fileName()))
 
         # set media
         self.obj.setCurrentSource(Phonon.MediaSource(filepath))
@@ -254,7 +272,7 @@ class MainWindow(QMainWindow):
 
     @pyqtSlot()
     def on_actionInsertTimestamp_triggered(self):
-        time = self.obj.currentTime()
+        time = self.obj.currentTime() + self.baseMsecs()
         milsec = time % 1000
         second = time / 1000 % 60
         minute = time / 1000 / 60 % 60
@@ -262,12 +280,83 @@ class MainWindow(QMainWindow):
         text = '<{:02d}:{:02d}:{:02d}.{}>'.format(hour, minute, second, milsec)
         self.ui.textEdit.textCursor().insertText(text)
 
+    def baseMsecs(self):
+        return QTime(0, 0).msecsTo(self.ui.timeEdit.time())
 
     @pyqtSlot()
     def on_actionBack_triggered(self):
         self.back(1000)
 
+    @pyqtSlot()
+    def on_actionForward_triggered(self):
+        self.forward(1000)
+
     def back(self, back):
         time = self.obj.currentTime() - back
         self.obj.seek(time)
         self.plot(time)
+
+    def forward(self, forward):
+        time = self.obj.currentTime() + forward
+        self.obj.seek(time)
+        self.plot(time)
+
+    @pyqtSlot()
+    def on_actionCursorLeft_triggered(self):
+        self.moveCursor(QTextCursor.Left)
+
+    @pyqtSlot()
+    def on_actionCursorRight_triggered(self):
+        self.moveCursor(QTextCursor.Right)
+
+    @pyqtSlot()
+    def on_actionCursorUp_triggered(self):
+        self.moveCursor(QTextCursor.Up)
+
+    @pyqtSlot()
+    def on_actionCursorDown_triggered(self):
+        self.moveCursor(QTextCursor.Down)
+
+    @pyqtSlot()
+    def on_actionSelectLeft_triggered(self):
+        self.moveCursor(QTextCursor.Left, QTextCursor.KeepAnchor)
+
+    @pyqtSlot()
+    def on_actionSelectRight_triggered(self):
+        self.moveCursor(QTextCursor.Right, QTextCursor.KeepAnchor)
+
+    @pyqtSlot()
+    def on_actionSelectUp_triggered(self):
+        self.moveCursor(QTextCursor.Up, QTextCursor.KeepAnchor)
+
+    @pyqtSlot()
+    def on_actionSelectDown_triggered(self):
+        self.moveCursor(QTextCursor.Down, QTextCursor.KeepAnchor)
+
+    def moveCursor(self, move, anchor=QTextCursor.MoveAnchor):
+        cursor = self.ui.textEdit.textCursor()
+        cursor.movePosition(move, anchor)
+        self.ui.textEdit.setTextCursor(cursor)
+
+    @pyqtSlot()
+    def on_actionTextCopy_triggered(self):
+        text = self.ui.textEdit.toPlainText()
+        QApplication.clipboard().setText(text)
+
+    @pyqtSlot()
+    def on_actionTextPaste_triggered(self):
+        text = QApplication.clipboard().text()
+        self.ui.textEdit.insertPlainText(text)
+
+    @pyqtSlot()
+    def on_actionInsertUnprintable_triggered(self):
+        unprintable = u"\u25a0"
+        self.ui.textEdit.insertPlainText(unprintable)
+
+    @pyqtSlot()
+    def on_actionInsertPerson_triggered(self):
+        ret = self.persons.exec_()
+        if ret != QDialog.Accepted:
+            return
+        person = self.persons.person()
+        self.ui.textEdit.insertPlainText(person)

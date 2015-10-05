@@ -26,7 +26,18 @@
          <widget class="QwtPlot" name="qwtPlot"/>
         </item>
         <item>
-         <widget class="Phonon::SeekSlider" name="seekSlider"/>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QTimeEdit" name="timeEdit">
+            <property name="currentSection">
+             <enum>QDateTimeEdit::MinuteSection</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Phonon::SeekSlider" name="seekSlider"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -64,12 +75,31 @@
     <addaction name="actionStartPause"/>
     <addaction name="actionStop"/>
     <addaction name="actionBack"/>
+    <addaction name="actionForward"/>
    </widget>
    <widget class="QMenu" name="menuText">
     <property name="title">
      <string>&amp;Text</string>
     </property>
+    <widget class="QMenu" name="menuCursor">
+     <property name="title">
+      <string>Cursor</string>
+     </property>
+     <addaction name="actionCursorLeft"/>
+     <addaction name="actionCursorRight"/>
+     <addaction name="actionCursorUp"/>
+     <addaction name="actionCursorDown"/>
+     <addaction name="actionSelectLeft"/>
+     <addaction name="actionSelectRight"/>
+     <addaction name="actionSelectUp"/>
+     <addaction name="actionSelectDown"/>
+    </widget>
     <addaction name="actionInsertTimestamp"/>
+    <addaction name="menuCursor"/>
+    <addaction name="actionTextCopy"/>
+    <addaction name="actionTextPaste"/>
+    <addaction name="actionInsertUnprintable"/>
+    <addaction name="actionInsertPerson"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWave"/>
@@ -176,6 +206,140 @@
    </property>
    <property name="text">
     <string>Back30</string>
+   </property>
+  </action>
+  <action name="actionForward">
+   <property name="text">
+    <string>Forward</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCursorLeft">
+   <property name="text">
+    <string>Left</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCursorRight">
+   <property name="text">
+    <string>Right</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCursorUp">
+   <property name="text">
+    <string>Up</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+K</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCursorDown">
+   <property name="text">
+    <string>Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+J</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionTextCopy">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionTextPaste">
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+V</string>
+   </property>
+  </action>
+  <action name="actionSelectLeft">
+   <property name="text">
+    <string>SelectLeft</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+H</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionSelectRight">
+   <property name="text">
+    <string>SelectRight</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionSelectUp">
+   <property name="text">
+    <string>SelectUp</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+K</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionSelectDown">
+   <property name="text">
+    <string>SelectDown</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+J</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionInsertUnprintable">
+   <property name="text">
+    <string>InsertUnprintable</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+X</string>
+   </property>
+  </action>
+  <action name="actionInsertPerson">
+   <property name="text">
+    <string>InsertPerson</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
  </widget>
