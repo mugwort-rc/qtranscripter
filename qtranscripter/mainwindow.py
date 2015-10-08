@@ -132,9 +132,11 @@ class MainWindow(QMainWindow):
             if isinstance(self.cache[0], np.ndarray):
                 ch = len(self.cache[0])
                 self.cache = self.cache.reshape(len(self.cache)*ch)[::ch]
-            self.cache /= 32768.0
+            self.cache = self.cache / 32768.0
             self.cache_start = cnt
 
+        bef -= self.cache_start
+        end -= self.cache_start
         dy = None
         if bef < 0:
             dy = self.cache[:end]
